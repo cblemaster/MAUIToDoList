@@ -43,7 +43,7 @@
                        Text="{Binding Description}" />
                 <CheckBox Grid.Column="1" Grid.Row="2" IsChecked="{Binding IsImportant}" />
                 <CheckBox Grid.Column="1" Grid.Row="3" IsChecked="{Binding IsComplete}" />
-                <DatePicker Grid.Column="1" Grid.Row="4" DateSelected="{Binding DueDate}" />
+                <DatePicker Grid.Column="1" Grid.Row="4" />
             </Grid>
         </Border>
     </Grid>   

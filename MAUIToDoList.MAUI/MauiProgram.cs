@@ -1,5 +1,4 @@
-﻿using MAUIToDoList.Services;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 namespace MAUIToDoList.MAUI
 {
@@ -15,7 +14,8 @@ namespace MAUIToDoList.MAUI
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 })
-                .Services.AddSingleton<IRepository, Repository>();
+                //.Services.AddSingleton<IRepository, Repository>();
+                ;
 
 #if DEBUG
 		builder.Logging.AddDebug();
