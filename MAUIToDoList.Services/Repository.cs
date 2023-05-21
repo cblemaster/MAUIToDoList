@@ -1,9 +1,4 @@
 ﻿using MAUIToDoList.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MAUIToDoList.Services
 {
@@ -17,14 +12,14 @@ namespace MAUIToDoList.Services
         public ToDoItem? Get(int id) => this._context.ToDoItems.Find(id) ?? null;
 
         public IEnumerable<ToDoItem> GetAll() => this._context.ToDoItems;
-        
+
         public ToDoItem Create(ToDoItem itemToCreate)
         {
             try
             {
                 if (itemToCreate == null) { throw new ArgumentException("The item to create doesn't exist.", nameof(itemToCreate)); }
                 if (itemToCreate.Id != 0) { throw new ArgumentException("The item to create cannot have an Id that isn't zero.", nameof(itemToCreate.Id)); }
-                
+
                 this._context.ToDoItems.Add(itemToCreate);
                 this._context.SaveChanges();
             }
