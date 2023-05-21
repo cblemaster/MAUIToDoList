@@ -2,7 +2,49 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MAUIToDoList.MAUI.MainPage">
-
-    
-
+    <Grid ColumnDefinitions="4*,6*">
+        <CollectionView x:Name="list"
+            SelectionMode="Single"
+                        ItemsSource="{Binding ToDoItems}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <VerticalStackLayout>
+                        <Label Text="{Binding Name}" />
+                        <HorizontalStackLayout>
+                            <Label Text="Due Date" />
+                            <Label Text="{Binding DueDate}" />    
+                        </HorizontalStackLayout>                        
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Border Grid.Column="1"
+                Stroke="{StaticResource Gray200}"
+                BindingContext="{Binding Source={x:Reference list},
+                               Path=SelectedItem}">
+            <Grid ColumnDefinitions="2*,8*"
+                  RowDefinitions="*,*,*,*,*">
+                <Label Text="Name" />
+                <Label Text="Description" Grid.Row="1" />
+                <Label Text="Is Important"
+                       Grid.Row="2"
+                       VerticalOptions="Center" />
+                <Label Text="Is Complete"
+                       Grid.Row="3"
+                       VerticalOptions="Center" />
+                <Label Text="Due Date"
+                       Grid.Row="4"
+                       VerticalOptions="Center" />
+                <Entry Grid.Column="1"
+                       Text="{Binding Name}"
+                       MaximumHeightRequest="30"  />
+                <Entry Grid.Column="1"
+                       Grid.Row="1"
+                       Text="{Binding Description}" />
+                <CheckBox Grid.Column="1" Grid.Row="2" IsChecked="{Binding IsImportant}" />
+                <CheckBox Grid.Column="1" Grid.Row="3" IsChecked="{Binding IsComplete}" />
+                <DatePicker Grid.Column="1" Grid.Row="4" DateSelected="{Binding DueDate}" />
+            </Grid>
+        </Border>
+    </Grid>   
 </ContentPage>
