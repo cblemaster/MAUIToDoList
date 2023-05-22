@@ -7,7 +7,12 @@
             <CollectionView x:Name="list"
                             Margin="5,5,0,0"
                             SelectionMode="Single"
-                            ItemsSource="{Binding ToDoItems}">
+                            ItemsSource="{Binding ToDoItems}"
+                            VerticalScrollBarVisibility="Default">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical"
+                                       ItemSpacing="20" />
+                </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <VerticalStackLayout Spacing="10">
@@ -17,22 +22,17 @@
                                 <Label Text="Due Date"
                                        FontSize="14"
                                        Margin="5,0,0,0" />
-                                <Label Text="{Binding DueDate}"
+                                <Label Text="{Binding DueDate, StringFormat='{0:d}'}"
                                        FontSize="14" />
                             </HorizontalStackLayout>
                         </VerticalStackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-            <Button Text="+"
-                    FontSize="28"
+            <Button Text="Add to do"
                     VerticalOptions="End"
                     HorizontalOptions="End"
-                    MaximumWidthRequest="32"
-                    MaximumHeightRequest="32"
-                    Margin="0,0,5,0"
-                    BackgroundColor="{StaticResource Tertiary}"
-                    TextColor="{StaticResource White}" />
+                    Margin="0,0,5,0" />
         </VerticalStackLayout>        
         <Border Grid.Column="1"
                 Stroke="{StaticResource Gray200}"

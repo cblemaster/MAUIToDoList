@@ -17,7 +17,7 @@ namespace MAUIToDoList.MAUI
                 new ObservableCollection<ToDoItem>
                     (this._context
                         .ToDoItems
-                            .OrderByDescending(X => X.DueDate)
+                            .OrderBy(X => X.DueDate)
                             .ThenBy(x => x.Name)
                     );
 
