@@ -25,5 +25,15 @@ namespace MAUIToDoList.MAUI
         }
 
         public ObservableCollection<ToDoItem> ToDoItems { get; set; }
+
+        private void LoadAllToDoItems()
+        {
+            this.ToDoItems = new ObservableCollection<ToDoItem>(this._context.ToDoItems.OrderBy(x => x.DueDate).ThenBy(x => x.Name));
+        }
+
+        private void LoadIncompleteToDoItems()
+        {
+            this.ToDoItems = new ObservableCollection<ToDoItem>(this._context.ToDoItems.Where(x => !x.IsComplete).OrderBy(x => x.DueDate).ThenBy(x => x.Name));
+        }
     }
 }
