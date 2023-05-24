@@ -18,13 +18,14 @@ namespace MAUIToDoList.MAUI
             {
                 context.ToDoItems = context.GetIncompleteToDoItems();
             }
-            context.SelectedToDo = null;
+            //context.SelectedToDo = null;
+            this.list.SelectedItem = null;
         }
 
-        private void list_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            MainPageModel context = ((MainPageModel)this.BindingContext);
-            context.SelectedToDo = (ToDoItem)e.CurrentSelection[0];
-        }
+        //private void list_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    MainPageModel context = ((MainPageModel)this.BindingContext);
+        //    context.SelectedToDo = (ToDoItem)e.CurrentSelection[0];
+        //}
     }
 }
