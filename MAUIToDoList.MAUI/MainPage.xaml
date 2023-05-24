@@ -3,9 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              x:Class="MAUIToDoList.MAUI.MainPage">
-    <!--// TODO: Fix the databinding on the datepicker
-    // Implement the show complete filter
-    // Consolidate styles that are used repeatedly in page resources
+    <!--// TODO: Consolidate styles that are used repeatedly into page resources
     // Apply and refine styling and visual appearance
     // Max length and other db-defined validation-->
     <Grid ColumnDefinitions="4*,6*">
@@ -13,7 +11,7 @@
             <CollectionView x:Name="list"
                             Margin="5,5,0,20"
                             SelectionMode="Single"
-                            ItemsSource="{Binding ToDoItems}">
+                            ItemsSource="{Binding ToDoItems, Mode=OneWay}">
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Vertical"
                                        ItemSpacing="20" />
@@ -22,8 +20,49 @@
                     <DataTemplate>
                         <VerticalStackLayout Spacing="10">
                             <Label Text="{Binding Name}"
-                                   FontSize="22">
+                                   FontSize="22"
+                                   IsVisible="{Binding Source={x:Reference filter}, Path=IsChecked}">
                                 <Label.Triggers>
+                                    <MultiTrigger TargetType="Label">
+                                        <MultiTrigger.Conditions>
+                                            <BindingCondition Binding="{Binding IsComplete}"
+                                                              Value="True" />
+                                            <BindingCondition Binding="{Binding Source={x:Reference filter}, Path=IsChecked}"
+                                                              Value="False" />
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="IsVisible"
+                                                Value="False" />
+                                    </MultiTrigger>
+                                    <MultiTrigger TargetType="Label">
+                                        <MultiTrigger.Conditions>
+                                            <BindingCondition Binding="{Binding IsComplete}"
+                                                              Value="True" />
+                                            <BindingCondition Binding="{Binding Source={x:Reference filter}, Path=IsChecked}"
+                                                              Value="True" />
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="IsVisible"
+                                                Value="True" />
+                                    </MultiTrigger>
+                                    <MultiTrigger TargetType="Label">
+                                        <MultiTrigger.Conditions>
+                                            <BindingCondition Binding="{Binding IsComplete}"
+                                                              Value="False" />
+                                            <BindingCondition Binding="{Binding Source={x:Reference filter}, Path=IsChecked}"
+                                                              Value="True" />
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="IsVisible"
+                                                Value="True" />
+                                    </MultiTrigger>
+                                    <MultiTrigger TargetType="Label">
+                                        <MultiTrigger.Conditions>
+                                            <BindingCondition Binding="{Binding IsComplete}"
+                                                              Value="False" />
+                                            <BindingCondition Binding="{Binding Source={x:Reference filter}, Path=IsChecked}"
+                                                              Value="False" />
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="IsVisible"
+                                                Value="True" />
+                                    </MultiTrigger>
                                     <DataTrigger TargetType="Label"
                                                  Binding="{Binding IsComplete}"
                                                  Value="True">
@@ -35,9 +74,95 @@
                             <HorizontalStackLayout Spacing="5">
                                 <Label Text="Due Date"
                                        FontSize="14"
-                                       Margin="5,0,0,0" />
+                                       Margin="5,0,0,0">
+                                    <Label.Triggers>
+                                        <MultiTrigger TargetType="Label">
+                                            <MultiTrigger.Conditions>
+                                                <BindingCondition Binding="{Binding IsComplete}"
+                                                                  Value="True" />
+                                                <BindingCondition Binding="{Binding Source={x:Reference filter}, Path=IsChecked}"
+                                                                  Value="False" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter Property="IsVisible"
+                                                    Value="False" />
+                                        </MultiTrigger>
+                                        <MultiTrigger TargetType="Label">
+                                            <MultiTrigger.Conditions>
+                                                <BindingCondition Binding="{Binding IsComplete}"
+                                                                  Value="True" />
+                                                <BindingCondition Binding="{Binding Source={x:Reference filter}, Path=IsChecked}"
+                                                                  Value="True" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter Property="IsVisible"
+                                                    Value="True" />
+                                        </MultiTrigger>
+                                        <MultiTrigger TargetType="Label">
+                                            <MultiTrigger.Conditions>
+                                                <BindingCondition Binding="{Binding IsComplete}"
+                                                                  Value="False" />
+                                                <BindingCondition Binding="{Binding Source={x:Reference filter}, Path=IsChecked}"
+                                                                  Value="True" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter Property="IsVisible"
+                                                    Value="True" />
+                                        </MultiTrigger>
+                                        <MultiTrigger TargetType="Label">
+                                            <MultiTrigger.Conditions>
+                                                <BindingCondition Binding="{Binding IsComplete}"
+                                                                  Value="False" />
+                                                <BindingCondition Binding="{Binding Source={x:Reference filter}, Path=IsChecked}"
+                                                                  Value="False" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter Property="IsVisible"
+                                                    Value="True" />
+                                        </MultiTrigger>                                        
+                                    </Label.Triggers>
+                                </Label>
                                 <Label Text="{Binding DueDate, StringFormat='{0:d}', TargetNullValue='None'}"
-                                       FontSize="14" />
+                                       FontSize="14">
+                                    <Label.Triggers>
+                                        <MultiTrigger TargetType="Label">
+                                            <MultiTrigger.Conditions>
+                                                <BindingCondition Binding="{Binding IsComplete}"
+                                                                  Value="True" />
+                                                <BindingCondition Binding="{Binding Source={x:Reference filter}, Path=IsChecked}"
+                                                                  Value="False" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter Property="IsVisible"
+                                                    Value="False" />
+                                        </MultiTrigger>
+                                        <MultiTrigger TargetType="Label">
+                                            <MultiTrigger.Conditions>
+                                                <BindingCondition Binding="{Binding IsComplete}"
+                                                                  Value="True" />
+                                                <BindingCondition Binding="{Binding Source={x:Reference filter}, Path=IsChecked}"
+                                                                  Value="True" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter Property="IsVisible"
+                                                    Value="True" />
+                                        </MultiTrigger>
+                                        <MultiTrigger TargetType="Label">
+                                            <MultiTrigger.Conditions>
+                                                <BindingCondition Binding="{Binding IsComplete}"
+                                                                  Value="False" />
+                                                <BindingCondition Binding="{Binding Source={x:Reference filter}, Path=IsChecked}"
+                                                                  Value="True" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter Property="IsVisible"
+                                                    Value="True" />
+                                        </MultiTrigger>
+                                        <MultiTrigger TargetType="Label">
+                                            <MultiTrigger.Conditions>
+                                                <BindingCondition Binding="{Binding IsComplete}"
+                                                                  Value="False" />
+                                                <BindingCondition Binding="{Binding Source={x:Reference filter}, Path=IsChecked}"
+                                                                  Value="False" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter Property="IsVisible"
+                                                    Value="True" />
+                                        </MultiTrigger>                                        
+                                    </Label.Triggers>
+                                </Label>
                             </HorizontalStackLayout>
                         </VerticalStackLayout>
                     </DataTemplate>
@@ -50,7 +175,8 @@
                     <Label Text="Show Complete:"
                            VerticalOptions="Center"
                            Margin="5,0,0,0" />
-                    <CheckBox IsChecked="True" />
+                    <CheckBox x:Name="filter"
+                              IsChecked="True" />
                 </HorizontalStackLayout>
                 <Button Text="Add to do"
                         Grid.Column="1"
@@ -103,8 +229,8 @@
                               Margin="0,0,5,0" />
                     <DatePicker Grid.Column="1"
                                 Grid.Row="5"
-                                Margin="0,0,5,0"></DatePicker>
-                                <!--DateSelected="{Binding DueDate, TargetNullValue={x:Static sys:DateTime.Now}}" />-->
+                                Margin="0,0,5,0"
+                                Date="{Binding DueDate, TargetNullValue={x:Static sys:DateTime.Now}}" />
                 </Grid>
                 <Grid ColumnDefinitions="5*,5*"
                       Grid.Column="1"
