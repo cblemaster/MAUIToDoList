@@ -13,7 +13,7 @@ namespace MAUIToDoList.MAUI
         public MainPageModel()
         {
             this.ToDoItems = this.GetAllToDoItems();
-        }        
+        }
 
         public ObservableCollection<ToDoItem> ToDoItems
         {
@@ -30,7 +30,6 @@ namespace MAUIToDoList.MAUI
         public ObservableCollection<ToDoItem> GetAllToDoItems() => new ObservableCollection<ToDoItem>(this._context.ToDoItems.OrderBy(t => t.DueDate).ThenBy(t => t.Name));
 
         public ObservableCollection<ToDoItem> GetIncompleteToDoItems() => new ObservableCollection<ToDoItem>(this._context.ToDoItems.Where(t => !t.IsComplete).OrderBy(t => t.DueDate).ThenBy(t => t.Name));
-
 
     }
 }

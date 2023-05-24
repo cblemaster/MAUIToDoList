@@ -1,36 +1,30 @@
 ﻿using MAUIToDoList.Data;
-using System.Collections.ObjectModel;
 
 namespace MAUIToDoList.MAUI
 {
     public partial class MainPage : ContentPage
     {
-        private readonly SimpleToDoListContext _context;
+        public MainPage() => this.InitializeComponent();
 
-        public MainPage()
+        //TODO: Get these events into commands on the viewmodel
+        private void filter_CheckedChanged(object sender, CheckedChangedEventArgs e)
         {
-            this.InitializeComponent();
-
-            this._context = new();
-
-            this.ToDoItems = new ObservableCollection<ToDoItem>
-                (this._context.ToDoItems.OrderBy(x => x.DueDate)
-                    .ThenBy(x => x.Name));
-
-            this.BindingContext = this;
+            MainPageModel context = ((MainPageModel)this.BindingContext);
+            if (e.Value)
+            {
+                context.ToDoItems = context.GetAllToDoItems();
+            }
+            else
+            {
+                context.ToDoItems = context.GetIncompleteToDoItems();
+            }
+            context.SelectedToDo = null;
         }
 
-        public ObservableCollection<ToDoItem> ToDoItems { get; set; }        
-
-        //private void LoadAllToDoItems() =>
-        //    this.ToDoItems = new ObservableCollection<ToDoItem>
-        //        (this._context.ToDoItems.OrderBy(x => x.DueDate)
-        //            .ThenBy(x => x.Name));
-
-        //private void LoadIncompleteToDoItems() =>
-        //    this.ToDoItems = new ObservableCollection<ToDoItem>
-        //        (this._context.ToDoItems.Where(x => !x.IsComplete)
-        //            .OrderBy(x => x.DueDate).ThenBy(x => x.Name));
-
+        private void list_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            MainPageModel context = ((MainPageModel)this.BindingContext);
+            context.SelectedToDo = (ToDoItem)e.CurrentSelection[0];
+        }
     }
 }
