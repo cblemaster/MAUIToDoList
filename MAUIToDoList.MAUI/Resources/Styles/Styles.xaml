@@ -32,6 +32,8 @@
         <Setter Property="Padding" Value="14,10"/>
         <Setter Property="MinimumHeightRequest" Value="44"/>
         <Setter Property="MinimumWidthRequest" Value="44"/>
+        <Setter Property="Margin"
+                Value="5" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -40,6 +42,12 @@
                         <VisualState.Setters>
                             <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
                             <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="Scale"
+                                    Value="0.8" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
@@ -157,7 +165,7 @@
         </Setter>
     </Style>
 
-    <Style TargetType="Label">
+    <Style TargetType="Label" x:Key="basiclabelstyle">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="FontFamily" Value="OpenSansRegular" />
@@ -175,7 +183,19 @@
             </VisualStateGroupList>
         </Setter>
     </Style>
-
+    
+    <Style TargetType="Label" x:Key="rightmarginlabelstyle"
+           BasedOn="{StaticResource basiclabelstyle}">
+        <Setter Property="Margin"
+                Value="0,0,5,0" />
+    </Style>
+    
+    <Style TargetType="Label"
+           x:Key="leftmarginlabelstyle"
+           BasedOn="{StaticResource basiclabelstyle}">
+        <Setter Property="Margin"
+                Value="5,0,0,0" />
+    </Style>
     <Style TargetType="ListView">
         <Setter Property="SeparatorColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray500}}" />
         <Setter Property="RefreshControlColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray200}}" />
