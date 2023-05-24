@@ -1,6 +1,4 @@
-﻿using MAUIToDoList.Data;
-
-namespace MAUIToDoList.MAUI
+﻿namespace MAUIToDoList.MAUI
 {
     public partial class MainPage : ContentPage
     {
@@ -10,22 +8,8 @@ namespace MAUIToDoList.MAUI
         private void filter_CheckedChanged(object sender, CheckedChangedEventArgs e)
         {
             MainPageModel context = ((MainPageModel)this.BindingContext);
-            if (e.Value)
-            {
-                context.ToDoItems = context.GetAllToDoItems();
-            }
-            else
-            {
-                context.ToDoItems = context.GetIncompleteToDoItems();
-            }
-            //context.SelectedToDo = null;
+            context.ToDoItems = e.Value ? context.GetAllToDoItems() : context.GetIncompleteToDoItems();
             this.list.SelectedItem = null;
         }
-
-        //private void list_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //    MainPageModel context = ((MainPageModel)this.BindingContext);
-        //    context.SelectedToDo = (ToDoItem)e.CurrentSelection[0];
-        //}
     }
 }

@@ -92,7 +92,7 @@
                            MaxLength="50">
                         <Entry.Triggers>
                             <DataTrigger TargetType="Entry"
-                                         Binding="{Binding Source={RelativeSource Self}, Path=Text.Length}"
+                                         Binding="{Binding Source={x:Reference entry}, Path=Text.Length}"
                                          Value="0">
                                 <Setter Property="BackgroundColor"
                                         Value="LightPink" />
