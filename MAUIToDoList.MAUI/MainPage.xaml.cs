@@ -4,7 +4,7 @@
     {
         public MainPage() => this.InitializeComponent();
 
-        //TODO: Get these events into commands on the viewmodel
+        //TODO: Get events into commands on the viewmodel
         private void filter_CheckedChanged(object sender, CheckedChangedEventArgs e)
         {
             MainPageModel context = ((MainPageModel)this.BindingContext);

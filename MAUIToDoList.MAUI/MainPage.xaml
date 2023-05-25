@@ -7,6 +7,9 @@
     <ContentPage.BindingContext>
         <root:MainPageModel />
     </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <root:NullableDateTimeToStringConverter x:Key="converter" />
+    </ContentPage.Resources>
     <Grid ColumnDefinitions="4*,6*">
         <Grid RowDefinitions="9*,1*">
             <CollectionView x:Name="list"
@@ -22,7 +25,7 @@
                         <VerticalStackLayout Spacing="10">
                             <Label Text="{Binding Name, Mode=TwoWay}"
                                    FontSize="22">
-                                <Label.Triggers>                                    
+                                <Label.Triggers>
                                     <DataTrigger TargetType="Label"
                                                  Binding="{Binding IsComplete}"
                                                  Value="True">
@@ -34,11 +37,9 @@
                             <HorizontalStackLayout Spacing="5">
                                 <Label Text="Due Date"
                                        FontSize="14"
-                                       Style="{StaticResource leftmarginlabelstyle}">
-                                </Label>
-                                <Label Text="{Binding DueDate, StringFormat='{0:d}', TargetNullValue='None'}"
-                                       FontSize="14">
-                                </Label>
+                                       Style="{StaticResource leftmarginlabelstyle}"></Label>
+                                <Label Text="{Binding DueDate, Mode=TwoWay, Converter={StaticResource converter}}"
+                                       FontSize="14"></Label>
                             </HorizontalStackLayout>
                         </VerticalStackLayout>
                     </DataTemplate>
@@ -53,7 +54,7 @@
                            Style="{StaticResource leftmarginlabelstyle}" />
                     <CheckBox x:Name="filter"
                               IsChecked="True"
-                              CheckedChanged="filter_CheckedChanged"/>
+                              CheckedChanged="filter_CheckedChanged" />
                 </HorizontalStackLayout>
                 <Button Text="Add to do"
                         Grid.Column="1" />
@@ -101,18 +102,18 @@
                     </Entry>
                     <Editor Grid.Column="1"
                             Grid.Row="1"
-                            Text="{Binding Description}"
+                            Text="{Binding Description, Mode=TwoWay}"
                             VerticalOptions="FillAndExpand"
                             Margin="0,0,5,0"
                             Grid.RowSpan="2"
-                            MaxLength="255"/>
+                            MaxLength="255" />
                     <CheckBox Grid.Column="1"
                               Grid.Row="3"
-                              IsChecked="{Binding IsImportant}"
+                              IsChecked="{Binding IsImportant, Mode=TwoWay}"
                               Margin="0,0,5,0" />
                     <CheckBox Grid.Column="1"
                               Grid.Row="4"
-                              IsChecked="{Binding IsComplete}"
+                              IsChecked="{Binding IsComplete, Mode=TwoWay}"
                               Margin="0,0,5,0" />
                     <DatePicker Grid.Column="1"
                                 Grid.Row="5"
