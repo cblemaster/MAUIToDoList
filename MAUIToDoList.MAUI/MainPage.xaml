@@ -37,9 +37,9 @@
                             <HorizontalStackLayout Spacing="5">
                                 <Label Text="Due Date"
                                        FontSize="14"
-                                       Style="{StaticResource leftmarginlabelstyle}"></Label>
+                                       Style="{StaticResource leftmarginlabelstyle}" />
                                 <Label Text="{Binding DueDate, Mode=TwoWay, Converter={StaticResource converter}}"
-                                       FontSize="14"></Label>
+                                       FontSize="14" />
                             </HorizontalStackLayout>
                         </VerticalStackLayout>
                     </DataTemplate>
@@ -57,7 +57,9 @@
                               CheckedChanged="filter_CheckedChanged" />
                 </HorizontalStackLayout>
                 <Button Text="Add to do"
-                        Grid.Column="1" />
+                        Grid.Column="1"
+                        BindingContext="{Binding Source={x:Reference list}, Path=BindingContext, Mode=TwoWay}"
+                        Command="{Binding AddCommand}" />
             </Grid>
         </Grid>
         <Border Grid.Column="1"
