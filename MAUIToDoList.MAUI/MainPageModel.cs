@@ -47,23 +47,14 @@ namespace MAUIToDoList.MAUI
 
         private async Task Add()
         {
-            //await Task.Run(() =>
-            //{
+            await Task.Run(() =>
+            {
                 this.IsAdding = true;
                 
                 ToDoItem itemToAdd = new() { Name = string.Empty };
                 this.ToDoItems.Add(itemToAdd);
-
-                MainPage? page = (MainPage)Shell.Current.CurrentPage;   // HACK: This only works because the main page is the only page...
-                if (page != null)
-                {
-                    CollectionView? list = (CollectionView)page.FindByName("list");
-                    if (list != null)
-                    {
-                        list.SelectedItem = (ToDoItem)itemToAdd;
-                    }
-                }
-            //});
-        }        
+                this.SelectedToDoItem = itemToAdd;                
+            });
+        } 
     }
 }
