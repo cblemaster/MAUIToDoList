@@ -2,59 +2,95 @@
 using CommunityToolkit.Mvvm.Input;
 using MAUIToDoList.Data;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace MAUIToDoList.MAUI
 {
-    public class MainPageModel : ObservableObject
+    public partial class MainPageModel : ObservableObject
     {
         private readonly SimpleToDoListContext _context = new();
-        private ObservableCollection<ToDoItem> _toDoItems = new();
-        private ToDoItem? _selectedToDoItem = null;
+        
+        [ObservableProperty]
+        private ObservableCollection<ObservableToDoItem> _toDoItems = new();
+        
+        [ObservableProperty]
+        private ObservableToDoItem? _selectedToDoItem = null;
+
+        [ObservableProperty]
         private bool _isAdding;
 
-        public MainPageModel()
-        {
-            this.ToDoItems = this.GetAllToDoItems();
-            this.AddCommand = new AsyncRelayCommand(this.Add);
-        }        
+        public MainPageModel() => this.ToDoItems = this.GetAllToDoItems();
+                
+        public ObservableCollection<ObservableToDoItem> GetAllToDoItems() =>
+            new(this.ConvertToDoItemsToObservable
+                (this._context.ToDoItems.OrderBy(t => t.DueDate).ThenBy(t => t.Name).ToList()));
 
-        public ObservableCollection<ToDoItem> ToDoItems
-        {
-            get => this._toDoItems;
-            set => this.SetProperty(ref this._toDoItems, value);
-        }        
+        public ObservableCollection<ObservableToDoItem> GetIncompleteToDoItems() => 
+            new(this.ConvertToDoItemsToObservable
+                (this._context.ToDoItems.Where(t => !t.IsComplete).OrderBy(t => t.DueDate).ThenBy(t => t.Name).ToList()));
 
-        public ToDoItem? SelectedToDoItem
+        private List<ObservableToDoItem> ConvertToDoItemsToObservable(List<ToDoItem> items)
         {
-            get => this._selectedToDoItem;
-            set => this.SetProperty(ref this._selectedToDoItem, value);
-        }        
-
-        public bool IsAdding
-        {
-            get => this._isAdding;
-            set => this.SetProperty(ref this._isAdding, value);
+            List<ObservableToDoItem> collection = new();
+            foreach (var item in items)     //TODO: Is there a better way to do this? This isn't very performant...
+            {
+                ObservableToDoItem observableItem = new(item);
+                collection.Add(observableItem);
+            }
+            return collection;
         }
 
-        public ICommand AddCommand { get; }        
-
-        public ObservableCollection<ToDoItem> GetAllToDoItems() => 
-            new(this._context.ToDoItems.OrderBy(t => t.DueDate).ThenBy(t => t.Name));
-
-        public ObservableCollection<ToDoItem> GetIncompleteToDoItems() => 
-            new(this._context.ToDoItems.Where(t => !t.IsComplete).OrderBy(t => t.DueDate).ThenBy(t => t.Name));
-
-        private async Task Add()
+        [RelayCommand]
+        private void Add()
         {
-            await Task.Run(() =>
-            {
-                this.IsAdding = true;
-                
-                ToDoItem itemToAdd = new() { Name = string.Empty };
-                this.ToDoItems.Add(itemToAdd);
-                this.SelectedToDoItem = itemToAdd;                
-            });
-        } 
+            this.IsAdding = true;
+
+            ObservableToDoItem itemToAdd = new(new ToDoItem { Name = string.Empty});
+            this.ToDoItems.Add(itemToAdd);
+            this.SelectedToDoItem = itemToAdd;
+        }
+    }
+
+    public class ObservableToDoItem : ObservableObject
+    {
+        private readonly ToDoItem _toDoItem;
+
+        public ObservableToDoItem(ToDoItem toDoItem) => this._toDoItem = toDoItem;
+
+        public int Id
+        {
+            get => this._toDoItem.Id;
+            set => this.SetProperty(this._toDoItem.Id, value, this._toDoItem, (u, i) => u.Id = i);
+        }
+
+        public string Name
+        {
+            get => this._toDoItem.Name;
+            set => this.SetProperty(this._toDoItem.Name, value, this._toDoItem, (u, n) => u.Name = n);
+        }
+
+        public string? Description
+        {
+            get => this._toDoItem.Description;
+            set => this.SetProperty(this._toDoItem.Description, value, this._toDoItem, (u, d) => u.Description = d);
+        }
+
+        public bool IsImportant
+        {
+            get => this._toDoItem.IsImportant;
+            set => this.SetProperty(this._toDoItem.IsImportant, value, this._toDoItem, (u, i) => u.IsImportant = i);
+        }
+
+        public bool IsComplete
+        {
+            get => this._toDoItem.IsComplete;
+            set => this.SetProperty(this._toDoItem.IsComplete, value, this._toDoItem, (u, i) => u.IsComplete = i);
+        }
+
+        public DateTime? DueDate
+        {
+            get => this._toDoItem.DueDate;
+            set => this.SetProperty(this._toDoItem.DueDate, value, this._toDoItem, (u, d) => u.DueDate = d);
+        }
     }
 }
+ 

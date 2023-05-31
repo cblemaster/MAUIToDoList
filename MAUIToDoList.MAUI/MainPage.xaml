@@ -8,7 +8,7 @@
         <root:MainPageModel />
     </ContentPage.BindingContext>
     <ContentPage.Resources>
-            <root:NullableDateTimeToStringConverter x:Key="dateConverter" />
+        <root:NullableDateTimeToStringConverter x:Key="dateConverter" />        
     </ContentPage.Resources>
     <Grid ColumnDefinitions="4*,6*">
         <Grid RowDefinitions="9*,1*">
@@ -28,7 +28,7 @@
                                    FontSize="22">
                                 <Label.Triggers>
                                     <DataTrigger TargetType="Label"
-                                                 Binding="{Binding IsComplete}"
+                                                 Binding="{Binding IsComplete, Mode=TwoWay}"
                                                  Value="True">
                                         <Setter Property="TextDecorations"
                                                 Value="Strikethrough" />
@@ -59,8 +59,17 @@
                 </HorizontalStackLayout>
                 <Button Text="Add to do"
                         Grid.Column="1"
-                        Command="{Binding AddCommand}"
-                        BindingContext="{Binding Source={x:Reference list}, Path=BindingContext, Mode=TwoWay}" />
+                        BindingContext="{Binding Source={x:Reference list}, Path=BindingContext, Mode=TwoWay}"
+                        Command="{Binding AddCommand, Mode=OneWay}">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding Source={x:Reference list}, Path=BindingContext.IsAdding, Mode=TwoWay}"
+                                     Value="True">
+                            <Setter Property="IsEnabled"
+                                    Value="False" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
             </Grid>
         </Grid>
         <Border Grid.Column="1"
@@ -96,7 +105,7 @@
                            MaxLength="50">
                         <Entry.Triggers>
                             <DataTrigger TargetType="Entry"
-                                         Binding="{Binding Source={x:Reference entry}, Path=Text.Length}"
+                                         Binding="{Binding Source={x:Reference entry}, Path=Text.Length, Mode=OneWay}"
                                          Value="0">
                                 <Setter Property="BackgroundColor"
                                         Value="LightPink" />
@@ -129,8 +138,7 @@
                     <Button Text="Save to do">
                         <Button.Triggers>
                             <DataTrigger TargetType="Button"
-                                         Binding="{Binding Source={x:Reference entry},
-                                         Path=Text.Length}"
+                                         Binding="{Binding Source={x:Reference entry}, Path=Text.Length, Mode=OneWay}"
                                          Value="0">
                                 <Setter Property="IsEnabled"
                                         Value="False" />
