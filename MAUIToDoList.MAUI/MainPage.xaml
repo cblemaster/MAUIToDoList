@@ -8,14 +8,15 @@
         <root:MainPageModel />
     </ContentPage.BindingContext>
     <ContentPage.Resources>
-        <root:NullableDateTimeToStringConverter x:Key="converter" />
+            <root:NullableDateTimeToStringConverter x:Key="dateConverter" />
     </ContentPage.Resources>
     <Grid ColumnDefinitions="4*,6*">
         <Grid RowDefinitions="9*,1*">
             <CollectionView x:Name="list"
                             Margin="5,5,0,20"
                             SelectionMode="Single"
-                            ItemsSource="{Binding ToDoItems, Mode=TwoWay}">
+                            ItemsSource="{Binding ToDoItems, Mode=TwoWay}"
+                            SelectedItem="{Binding SelectedToDoItem, Mode=TwoWay}">
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Vertical"
                                        ItemSpacing="20" />
@@ -38,7 +39,7 @@
                                 <Label Text="Due Date"
                                        FontSize="14"
                                        Style="{StaticResource leftmarginlabelstyle}" />
-                                <Label Text="{Binding DueDate, Mode=TwoWay, Converter={StaticResource converter}}"
+                                <Label Text="{Binding DueDate, Mode=TwoWay, Converter={StaticResource dateConverter}}"
                                        FontSize="14" />
                             </HorizontalStackLayout>
                         </VerticalStackLayout>
@@ -58,13 +59,13 @@
                 </HorizontalStackLayout>
                 <Button Text="Add to do"
                         Grid.Column="1"
-                        BindingContext="{Binding Source={x:Reference list}, Path=BindingContext, Mode=TwoWay}"
-                        Command="{Binding AddCommand}" />
+                        Command="{Binding AddCommand}"
+                        BindingContext="{Binding Source={x:Reference list}, Path=BindingContext, Mode=TwoWay}" />
             </Grid>
         </Grid>
         <Border Grid.Column="1"
                 Stroke="{StaticResource Gray200}"
-                BindingContext="{Binding Source={x:Reference list}, Path=SelectedItem, Mode=TwoWay}">
+                BindingContext="{Binding Source={x:Reference list}, Path=BindingContext.SelectedToDoItem, Mode=TwoWay}">
             <Grid RowDefinitions="9*,1*">
                 <Grid ColumnDefinitions="2*,8*"
                       RowDefinitions="*,*,*,*,*,*">

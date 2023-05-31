@@ -1,11 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MAUIToDoList.Data;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using ShellItem = Microsoft.Maui.Controls.ShellItem;
 
 namespace MAUIToDoList.MAUI
 {
@@ -13,20 +10,34 @@ namespace MAUIToDoList.MAUI
     {
         private readonly SimpleToDoListContext _context = new();
         private ObservableCollection<ToDoItem> _toDoItems = new();
+        private ToDoItem? _selectedToDoItem = null;
+        private bool _isAdding;
 
         public MainPageModel()
         {
             this.ToDoItems = this.GetAllToDoItems();
             this.AddCommand = new AsyncRelayCommand(this.Add);
-        }
+        }        
 
         public ObservableCollection<ToDoItem> ToDoItems
         {
             get => this._toDoItems;
             set => this.SetProperty(ref this._toDoItems, value);
+        }        
+
+        public ToDoItem? SelectedToDoItem
+        {
+            get => this._selectedToDoItem;
+            set => this.SetProperty(ref this._selectedToDoItem, value);
+        }        
+
+        public bool IsAdding
+        {
+            get => this._isAdding;
+            set => this.SetProperty(ref this._isAdding, value);
         }
 
-        public ICommand AddCommand { get; }
+        public ICommand AddCommand { get; }        
 
         public ObservableCollection<ToDoItem> GetAllToDoItems() => 
             new(this._context.ToDoItems.OrderBy(t => t.DueDate).ThenBy(t => t.Name));
@@ -38,6 +49,8 @@ namespace MAUIToDoList.MAUI
         {
             //await Task.Run(() =>
             //{
+                this.IsAdding = true;
+                
                 ToDoItem itemToAdd = new() { Name = string.Empty };
                 this.ToDoItems.Add(itemToAdd);
 
@@ -51,7 +64,6 @@ namespace MAUIToDoList.MAUI
                     }
                 }
             //});
-        }
-
+        }        
     }
 }
