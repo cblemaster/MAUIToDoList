@@ -8,14 +8,15 @@
         <root:MainPageModel />
     </ContentPage.BindingContext>
     <ContentPage.Resources>
-        <root:NullableDateTimeToStringConverter x:Key="dateConverter" />        
+        <root:NullableDateTimeToStringConverter x:Key="dateConverter" />
+        <root:ReverseBoolToBoolConverter x:Key="boolConverter" />
     </ContentPage.Resources>
     <Grid ColumnDefinitions="4*,6*">
         <Grid RowDefinitions="9*,1*">
             <CollectionView x:Name="list"
                             Margin="5,5,0,20"
                             SelectionMode="Single"
-                            ItemsSource="{Binding ToDoItems, Mode=TwoWay}"
+                            ItemsSource="{Binding DisplayedToDoItems, Mode=TwoWay}"
                             SelectedItem="{Binding SelectedToDoItem, Mode=TwoWay}">
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Vertical"
@@ -55,21 +56,15 @@
                            Style="{StaticResource leftmarginlabelstyle}" />
                     <CheckBox x:Name="filter"
                               IsChecked="True"
-                              CheckedChanged="filter_CheckedChanged" />
+                              CheckedChanged="filter_CheckedChanged"
+                              BindingContext="{Binding Source={x:Reference list}, Path=BindingContext, Mode=TwoWay}"
+                              IsEnabled="{Binding IsAdding, Converter={StaticResource boolConverter}, Mode=OneWay}" />
                 </HorizontalStackLayout>
                 <Button Text="Add to do"
                         Grid.Column="1"
                         BindingContext="{Binding Source={x:Reference list}, Path=BindingContext, Mode=TwoWay}"
-                        Command="{Binding AddCommand, Mode=OneWay}">
-                    <Button.Triggers>
-                        <DataTrigger TargetType="Button"
-                                     Binding="{Binding Source={x:Reference list}, Path=BindingContext.IsAdding, Mode=TwoWay}"
-                                     Value="True">
-                            <Setter Property="IsEnabled"
-                                    Value="False" />
-                        </DataTrigger>
-                    </Button.Triggers>
-                </Button>
+                        Command="{Binding AddCommand, Mode=OneWay}"
+                        IsEnabled="{Binding IsAdding, Converter={StaticResource boolConverter}, Mode=OneWay}" />
             </Grid>
         </Grid>
         <Border Grid.Column="1"

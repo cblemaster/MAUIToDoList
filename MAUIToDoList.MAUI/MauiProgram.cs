@@ -13,9 +13,7 @@ namespace MAUIToDoList.MAUI
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                })
-                //.Services.AddSingleton<IRepository, Repository>();
-                ;
+                });
 
 #if DEBUG
             builder.Logging.AddDebug();

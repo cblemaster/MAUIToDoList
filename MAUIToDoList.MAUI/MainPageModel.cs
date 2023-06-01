@@ -8,30 +8,33 @@ namespace MAUIToDoList.MAUI
     public partial class MainPageModel : ObservableObject
     {
         private readonly SimpleToDoListContext _context = new();
-        
+
         [ObservableProperty]
         private ObservableCollection<ObservableToDoItem> _toDoItems = new();
-        
+
+        [ObservableProperty]
+        private ObservableCollection<ObservableToDoItem> _displayedToDoItems = new();
+
         [ObservableProperty]
         private ObservableToDoItem? _selectedToDoItem = null;
 
         [ObservableProperty]
         private bool _isAdding;
 
-        public MainPageModel() => this.ToDoItems = this.GetAllToDoItems();
-                
+        public MainPageModel()
+        {
+            this.ToDoItems = this.GetAllToDoItems();
+            this.DisplayedToDoItems = this.ToDoItems;
+        }
+
         public ObservableCollection<ObservableToDoItem> GetAllToDoItems() =>
-            new(this.ConvertToDoItemsToObservable
+            new(ConvertToDoItemsToObservable
                 (this._context.ToDoItems.OrderBy(t => t.DueDate).ThenBy(t => t.Name).ToList()));
 
-        public ObservableCollection<ObservableToDoItem> GetIncompleteToDoItems() => 
-            new(this.ConvertToDoItemsToObservable
-                (this._context.ToDoItems.Where(t => !t.IsComplete).OrderBy(t => t.DueDate).ThenBy(t => t.Name).ToList()));
-
-        private List<ObservableToDoItem> ConvertToDoItemsToObservable(List<ToDoItem> items)
+        private static List<ObservableToDoItem> ConvertToDoItemsToObservable(List<ToDoItem> items)
         {
             List<ObservableToDoItem> collection = new();
-            foreach (var item in items)     //TODO: Is there a better way to do this? This isn't very performant...
+            foreach (ToDoItem item in items)     //TODO: Is there a better way to do this? This isn't very performant...
             {
                 ObservableToDoItem observableItem = new(item);
                 collection.Add(observableItem);
@@ -42,9 +45,9 @@ namespace MAUIToDoList.MAUI
         [RelayCommand]
         private void Add()
         {
-            this.IsAdding = true;
+            this.IsAdding = true;   //TODO: Disable selection for the collectionview when IsAdding == true;
 
-            ObservableToDoItem itemToAdd = new(new ToDoItem { Name = string.Empty});
+            ObservableToDoItem itemToAdd = new(new ToDoItem { Name = string.Empty });
             this.ToDoItems.Add(itemToAdd);
             this.SelectedToDoItem = itemToAdd;
         }
@@ -93,4 +96,3 @@ namespace MAUIToDoList.MAUI
         }
     }
 }
- 
