@@ -16,8 +16,16 @@
             <CollectionView x:Name="list"
                             Margin="5,5,0,20"
                             SelectionMode="Single"
-                            ItemsSource="{Binding DisplayedToDoItems, Mode=TwoWay}"
+                            ItemsSource="{Binding FilteredToDoItems, Mode=TwoWay}"
                             SelectedItem="{Binding SelectedToDoItem, Mode=TwoWay}">
+                <CollectionView.Triggers>
+                    <DataTrigger TargetType="CollectionView"
+                                 Binding="{Binding IsAdding}"
+                                 Value="True">
+                        <Setter Property="SelectionMode"
+                                Value="None" />
+                    </DataTrigger>
+                </CollectionView.Triggers>
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Vertical"
                                        ItemSpacing="20" />
@@ -122,10 +130,18 @@
                               Grid.Row="4"
                               IsChecked="{Binding IsComplete, Mode=TwoWay}"
                               Margin="0,0,5,0" />
-                    <DatePicker Grid.Column="1"
-                                Grid.Row="5"
-                                Margin="0,0,5,0"
-                                Date="{Binding DueDate, TargetNullValue={x:Static sys:DateTime.Now}, Mode=TwoWay}" />
+                    <HorizontalStackLayout Spacing="5"
+                                           Grid.Column="1"
+                                           Grid.Row="5"
+                                           Margin="0,0,5,0">
+                        <Label Text="Has Due Date?"
+                               VerticalOptions="Center" />
+                        <CheckBox IsChecked="False"
+                                  x:Name="hasduedateswitch"
+                                  CheckedChanged="hasduedateswitch_CheckedChanged"/>
+                        <DatePicker Date="{Binding DueDate, TargetNullValue={x:Static sys:DateTime.Now}, Mode=TwoWay}"
+                                    IsVisible="{Binding Source={x:Reference hasduedateswitch }, Path=IsChecked, Mode=OneWay}" />
+                    </HorizontalStackLayout>
                 </Grid>
                 <Grid ColumnDefinitions="5*,5*"
                       Grid.Column="1"

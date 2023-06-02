@@ -13,7 +13,7 @@ namespace MAUIToDoList.MAUI
         private ObservableCollection<ObservableToDoItem> _toDoItems = new();
 
         [ObservableProperty]
-        private ObservableCollection<ObservableToDoItem> _displayedToDoItems = new();
+        private ObservableCollection<ObservableToDoItem> _filteredToDoItems = new();
 
         [ObservableProperty]
         private ObservableToDoItem? _selectedToDoItem = null;
@@ -24,7 +24,7 @@ namespace MAUIToDoList.MAUI
         public MainPageModel()
         {
             this.ToDoItems = this.GetAllToDoItems();
-            this.DisplayedToDoItems = this.ToDoItems;
+            this.FilteredToDoItems = this.ToDoItems;
         }
 
         public ObservableCollection<ObservableToDoItem> GetAllToDoItems() =>
@@ -45,10 +45,23 @@ namespace MAUIToDoList.MAUI
         [RelayCommand]
         private void Add()
         {
-            this.IsAdding = true;   //TODO: Disable selection for the collectionview when IsAdding == true;
+            this.IsAdding = true;
 
             ObservableToDoItem itemToAdd = new(new ToDoItem { Name = string.Empty });
             this.ToDoItems.Add(itemToAdd);
+
+            if (this.ToDoItems.Count > this.FilteredToDoItems.Count)
+            {
+                //  The ShowComplete filter has been applied at some point,
+                //      so the ToDoItems and FilteredToDoItems collections
+                //      are no longer the same
+                //  Therefore we also need to add the new item to the
+                //      filtered items list; IsComplete = false for the
+                //      item we are adding so it doesn't matter if the
+                //      filtered list is showing or hiding compeleted items
+                this.FilteredToDoItems.Add(itemToAdd);
+            }
+                       
             this.SelectedToDoItem = itemToAdd;
         }
     }

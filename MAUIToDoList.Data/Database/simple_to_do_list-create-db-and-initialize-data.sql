@@ -26,7 +26,7 @@ CREATE TABLE to_do_item
 	[description]	    varchar(255) 						NULL,
 	is_important		bit									NOT NULL,
 	is_complete			bit									NOT NULL,
-	due_date			datetime							NULL
+	due_date			datetime							NOT NULL
 
  
 	CONSTRAINT PK_transfer_types PRIMARY KEY(id)	
@@ -35,7 +35,7 @@ GO
 
 -- load a row of sample data
 INSERT INTO to_do_item ([name],[description],is_important,is_complete,due_date)
-VALUES ('Mow lawn','Mow lawn, front and back',0,0,NULL),
+VALUES ('Mow lawn','Mow lawn, front and back',0,0,GETDATE()),
 	   ('Grocery shopping','Milk, eggs, bread',1,0,DATEADD(day,3,GETDATE())),
 	   ('Schedule car maintenance','Oil change and tire rotation',0,1,DATEADD(day,-6,GETDATE())),
 	   ('Pick up dry cleaning','New place at 6th and Empire',1,1,DATEADD(day,-12,GETDATE())),
