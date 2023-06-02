@@ -12,5 +12,5 @@ public partial class ToDoItem
 
     public bool IsComplete { get; set; }
 
-    public DateTime? DueDate { get; set; }
+    public DateTime DueDate { get; set; }
 }

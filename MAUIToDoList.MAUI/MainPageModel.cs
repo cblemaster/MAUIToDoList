@@ -7,6 +7,12 @@ namespace MAUIToDoList.MAUI
 {
     public partial class MainPageModel : ObservableObject
     {
+        public MainPageModel()
+        {
+            this.ToDoItems = this.GetAllToDoItems();
+            this.FilteredToDoItems = this.ToDoItems;
+        }
+
         private readonly SimpleToDoListContext _context = new();
 
         [ObservableProperty]
@@ -19,13 +25,7 @@ namespace MAUIToDoList.MAUI
         private ObservableToDoItem? _selectedToDoItem = null;
 
         [ObservableProperty]
-        private bool _isAdding;
-
-        public MainPageModel()
-        {
-            this.ToDoItems = this.GetAllToDoItems();
-            this.FilteredToDoItems = this.ToDoItems;
-        }
+        private bool _isAdding;        
 
         public ObservableCollection<ObservableToDoItem> GetAllToDoItems() =>
             new(ConvertToDoItemsToObservable
@@ -102,7 +102,7 @@ namespace MAUIToDoList.MAUI
             set => this.SetProperty(this._toDoItem.IsComplete, value, this._toDoItem, (u, i) => u.IsComplete = i);
         }
 
-        public DateTime? DueDate
+        public DateTime DueDate
         {
             get => this._toDoItem.DueDate;
             set => this.SetProperty(this._toDoItem.DueDate, value, this._toDoItem, (u, d) => u.DueDate = d);
