@@ -25,7 +25,10 @@ namespace MAUIToDoList.MAUI
         private ObservableToDoItem? _selectedToDoItem = null;
 
         [ObservableProperty]
-        private bool _isAdding;  
+        private bool _isAdding;
+
+        [ObservableProperty]
+        private bool _isEditing;
 
         public ObservableCollection<ObservableToDoItem> GetAllToDoItems() =>
             new(ConvertToDoItemsToObservable
@@ -58,6 +61,31 @@ namespace MAUIToDoList.MAUI
             this.FilteredToDoItems.Add(oItemToAdd);
                        
             this.SelectedToDoItem = oItemToAdd;            
+        }
+
+        [RelayCommand]
+        private void Delete()
+        {
+            ObservableToDoItem? oItemToDelete = this.SelectedToDoItem;
+            if (oItemToDelete != null)
+            {
+                if (this.ToDoItems.Contains<ObservableToDoItem>(oItemToDelete))
+                {
+                    this.ToDoItems.Remove(oItemToDelete);
+                }
+                if (this.FilteredToDoItems.Contains<ObservableToDoItem>(oItemToDelete))
+                {
+                    this.FilteredToDoItems.Remove(oItemToDelete);
+                }
+
+                ToDoItem? found = this._context.ToDoItems.Find(oItemToDelete!.Id);
+
+                if (found != null)
+                {
+                    this._context.ToDoItems.Remove(found);
+                    this._context.SaveChanges(true);
+                }
+            }           
         }
     }
 

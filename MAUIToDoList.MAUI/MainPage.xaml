@@ -150,7 +150,9 @@
                         </Button.Triggers>
                     </Button>
                     <Button Text="Delete to do"
-                            Grid.Column="1" />
+                            Grid.Column="1"
+                            BindingContext="{Binding Source={x:Reference list}, Path=BindingContext, Mode=TwoWay}"
+                            Command="{Binding DeleteCommand, Mode=OneWay}" />
                 </Grid>
             </Grid>
         </Border>
