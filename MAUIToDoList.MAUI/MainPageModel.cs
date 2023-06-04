@@ -10,7 +10,7 @@ namespace MAUIToDoList.MAUI
         public MainPageModel()
         {
             this.ToDoItems = this.GetAllToDoItems();
-            this.FilteredToDoItems = this.ToDoItems;
+            this.FilteredToDoItems = new ObservableCollection<ObservableToDoItem>(this.ToDoItems.ToList());
         }
 
         private readonly SimpleToDoListContext _context = new();
@@ -47,22 +47,17 @@ namespace MAUIToDoList.MAUI
         {
             this.IsAdding = true;
 
-            ObservableToDoItem itemToAdd = new(new ToDoItem { Name = string.Empty, DueDate = DateTime.Now });
-            this.ToDoItems.Add(itemToAdd);
+            ToDoItem itemToAdd = new() { Name = string.Empty, DueDate = DateTime.Now };
+                        
+            this._context.ToDoItems.Add(itemToAdd);
+            this._context.SaveChanges();
 
-            if (this.ToDoItems.Count > this.FilteredToDoItems.Count)
-            {
-                //  The ShowComplete filter has been applied at some point,
-                //      so the ToDoItems and FilteredToDoItems collections
-                //      are no longer the same
-                //  Therefore we also need to add the new item to the
-                //      filtered items list; IsComplete = false for the
-                //      item we are adding so it doesn't matter if the
-                //      filtered list is showing or hiding compeleted items
-                this.FilteredToDoItems.Add(itemToAdd);
-            }
+            ObservableToDoItem oItemToAdd = new(itemToAdd);
+
+            this.ToDoItems.Add(oItemToAdd);
+            this.FilteredToDoItems.Add(oItemToAdd);
                        
-            this.SelectedToDoItem = itemToAdd;
+            this.SelectedToDoItem = oItemToAdd;            
         }
     }
 
