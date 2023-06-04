@@ -25,11 +25,11 @@ namespace MAUIToDoList.MAUI
         private ObservableToDoItem? _selectedToDoItem = null;
 
         [ObservableProperty]
-        private bool _isAdding;        
+        private bool _isAdding;  
 
         public ObservableCollection<ObservableToDoItem> GetAllToDoItems() =>
             new(ConvertToDoItemsToObservable
-                (this._context.ToDoItems.OrderBy(t => t.DueDate).ThenBy(t => t.Name).ToList()));
+                (this._context.ToDoItems.OrderByDescending(t => t.DueDate).ThenBy(t => t.Name).ToList()));
 
         private static List<ObservableToDoItem> ConvertToDoItemsToObservable(List<ToDoItem> items)
         {
@@ -47,7 +47,7 @@ namespace MAUIToDoList.MAUI
         {
             this.IsAdding = true;
 
-            ObservableToDoItem itemToAdd = new(new ToDoItem { Name = string.Empty });
+            ObservableToDoItem itemToAdd = new(new ToDoItem { Name = string.Empty, DueDate = DateTime.Now });
             this.ToDoItems.Add(itemToAdd);
 
             if (this.ToDoItems.Count > this.FilteredToDoItems.Count)
