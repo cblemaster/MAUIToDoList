@@ -7,19 +7,23 @@
     <ContentPage.BindingContext>
         <root:MainPageModel />
     </ContentPage.BindingContext>
-    <ContentPage.Resources>
-        <root:ReverseBoolToBoolConverter x:Key="boolConverter" />
-    </ContentPage.Resources>
     <Grid ColumnDefinitions="4*,6*">
         <Grid RowDefinitions="9*,1*">
             <CollectionView x:Name="list"
                             Margin="5,5,0,20"
                             SelectionMode="Single"
                             ItemsSource="{Binding FilteredToDoItems, Mode=TwoWay}"
-                            SelectedItem="{Binding SelectedToDoItem, Mode=TwoWay}">
+                            SelectedItem="{Binding SelectedToDoItem, Mode=TwoWay}"
+                            SelectionChangedCommand="{Binding ListSelectionChangedCommand}">
                 <CollectionView.Triggers>
                     <DataTrigger TargetType="CollectionView"
                                  Binding="{Binding IsAdding}"
+                                 Value="True">
+                        <Setter Property="SelectionMode"
+                                Value="None" />
+                    </DataTrigger>
+                    <DataTrigger TargetType="CollectionView"
+                                 Binding="{Binding IsEditing}"
                                  Value="True">
                         <Setter Property="SelectionMode"
                                 Value="None" />
@@ -61,17 +65,47 @@
                     <Label Text="Show Complete:"
                            VerticalOptions="Center"
                            Style="{StaticResource leftmarginlabelstyle}" />
-                    <CheckBox x:Name="filter"
-                              IsChecked="True"
-                              CheckedChanged="filter_CheckedChanged"
-                              BindingContext="{Binding Source={x:Reference list}, Path=BindingContext, Mode=TwoWay}"
-                              IsEnabled="{Binding IsAdding, Converter={StaticResource boolConverter}, Mode=OneWay}" />
+                    <CheckBox IsChecked="True"
+                              CheckedChanged="filter_CheckedChanged">
+                        <CheckBox.Triggers>
+                            <DataTrigger TargetType="CheckBox"
+                                         BindingContext="{Binding Source={x:Reference list}, Path=BindingContext, Mode=OneWay}"
+                                         Binding="{Binding IsAdding, Mode=OneWay}"
+                                         Value="True">
+                                <Setter Property="IsEnabled"
+                                        Value="False" />
+                            </DataTrigger>
+                            <DataTrigger TargetType="CheckBox"
+                                         BindingContext="{Binding Source={x:Reference list}, Path=BindingContext, Mode=OneWay}"
+                                         Binding="{Binding IsEditing, Mode=OneWay}"
+                                         Value="True">
+                                <Setter Property="IsEnabled"
+                                        Value="False" />
+                            </DataTrigger>
+                        </CheckBox.Triggers>
+                    </CheckBox>
                 </HorizontalStackLayout>
                 <Button Text="Add to do"
                         Grid.Column="1"
                         BindingContext="{Binding Source={x:Reference list}, Path=BindingContext, Mode=TwoWay}"
-                        Command="{Binding AddCommand, Mode=OneWay}"
-                        IsEnabled="{Binding IsAdding, Converter={StaticResource boolConverter}, Mode=OneWay}" />
+                        Command="{Binding AddCommand, Mode=OneWay}">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     BindingContext="{Binding Source={x:Reference list}, Path=BindingContext, Mode=OneWay}"
+                                     Binding="{Binding IsAdding, Mode=OneWay}"
+                                     Value="True">
+                            <Setter Property="IsEnabled"
+                                    Value="False" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Button"
+                                     BindingContext="{Binding Source={x:Reference list}, Path=BindingContext, Mode=OneWay}"
+                                     Binding="{Binding IsEditing, Mode=OneWay}"
+                                     Value="True">
+                            <Setter Property="IsEnabled"
+                                    Value="False" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
             </Grid>
         </Grid>
         <Border Grid.Column="1"
@@ -83,58 +117,64 @@
                     <Label Text="Name"
                            VerticalOptions="Center"
                            Style="{StaticResource leftmarginlabelstyle}" />
-                    <Label Text="Description"
-                           Grid.Row="1"
-                           Style="{StaticResource leftmarginlabelstyle}"
-                           Grid.RowSpan="2" />
-                    <Label Text="Is Important"
-                           Grid.Row="3"
-                           VerticalOptions="Center"
-                           Style="{StaticResource leftmarginlabelstyle}" />
-                    <Label Text="Is Complete"
-                           Grid.Row="4"
-                           VerticalOptions="Center"
-                           Style="{StaticResource leftmarginlabelstyle}" />
-                    <Label Text="Due Date"
-                           Grid.Row="5"
-                           VerticalOptions="Center"
-                           Style="{StaticResource leftmarginlabelstyle}" />
-                    <Entry x:Name="entry"
+                    <Label  Text="Description"
+                            Grid.Row="1"
+                            Style="{StaticResource leftmarginlabelstyle}"
+                            Grid.RowSpan="2" />
+                    <Label  Text="Is Important"
+                            Grid.Row="3"
+                            VerticalOptions="Center"
+                            Style="{StaticResource leftmarginlabelstyle}" />
+                    <Label  Text="Is Complete"
+                            Grid.Row="4"
+                            VerticalOptions="Center"
+                            Style="{StaticResource leftmarginlabelstyle}" />
+                    <Label  Text="Due Date"
+                            Grid.Row="5"
+                            VerticalOptions="Center"
+                            Style="{StaticResource leftmarginlabelstyle}" />
+                    <Entry x:Name="nameentry"
                            Grid.Column="1"
                            Text="{Binding Name, Mode=TwoWay}"
                            MaximumHeightRequest="30"
                            Margin="0,0,5,0"
-                           MaxLength="50">
+                           MaxLength="50"
+                           TextChanged="detailControl_ValueChanged">
                         <Entry.Triggers>
                             <DataTrigger TargetType="Entry"
-                                         Binding="{Binding Source={x:Reference entry}, Path=Text.Length, Mode=OneWay}"
+                                         Binding="{Binding Source={x:Reference nameentry}, Path=Text.Length, Mode=OneWay}"
                                          Value="0">
                                 <Setter Property="BackgroundColor"
                                         Value="LightPink" />
                             </DataTrigger>
                         </Entry.Triggers>
                     </Entry>
-                    <Editor Grid.Column="1"
+                    <Editor x:Name="desceditor"
+                            Grid.Column="1"
                             Grid.Row="1"
                             Text="{Binding Description, Mode=TwoWay}"
                             VerticalOptions="FillAndExpand"
                             Margin="0,0,5,0"
                             Grid.RowSpan="2"
-                            MaxLength="255" />
-                    <CheckBox Grid.Column="1"
+                            MaxLength="255"
+                            TextChanged="detailControl_ValueChanged" />
+                    <CheckBox x:Name="isimportantcheckbox"
+                              Grid.Column="1"
                               Grid.Row="3"
                               IsChecked="{Binding IsImportant, Mode=TwoWay}"
-                              Margin="0,0,5,0" />
-                    <CheckBox Grid.Column="1"
+                              Margin="0,0,5,0"
+                              CheckedChanged="detailControl_ValueChanged" />
+                    <CheckBox x:Name="iscompletecheckbox"
+                              Grid.Column="1"
                               Grid.Row="4"
                               IsChecked="{Binding IsComplete, Mode=TwoWay}"
-                              Margin="0,0,5,0" />
-                    <HorizontalStackLayout Spacing="5"
-                                           Grid.Column="1"
-                                           Grid.Row="5"
-                                           Margin="0,0,5,0">
-                        <DatePicker Date="{Binding DueDate, TargetNullValue={x:Static sys:DateTime.Now}, Mode=TwoWay}" />
-                    </HorizontalStackLayout>
+                              Margin="0,0,5,0"
+                              CheckedChanged="detailControl_ValueChanged" />
+                    <DatePicker x:Name="duedatepicker"
+                                Grid.Column="1"
+                                Grid.Row="5"
+                                Date="{Binding DueDate, TargetNullValue={x:Static sys:DateTime.Now}, Mode=TwoWay}"
+                                DateSelected="detailControl_ValueChanged" />
                 </Grid>
                 <Grid ColumnDefinitions="5*,5*"
                       Grid.Column="1"
@@ -142,7 +182,7 @@
                     <Button Text="Save to do">
                         <Button.Triggers>
                             <DataTrigger TargetType="Button"
-                                         Binding="{Binding Source={x:Reference entry}, Path=Text.Length, Mode=OneWay}"
+                                         Binding="{Binding Source={x:Reference nameentry}, Path=Text.Length, Mode=OneWay}"
                                          Value="0">
                                 <Setter Property="IsEnabled"
                                         Value="False" />

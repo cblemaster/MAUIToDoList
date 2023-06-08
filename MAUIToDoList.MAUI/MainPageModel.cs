@@ -46,12 +46,20 @@ namespace MAUIToDoList.MAUI
         }
 
         [RelayCommand]
+        private void ListSelectionChangedCommand()
+        {
+            this.IsAdding = false;
+            this.IsEditing = false;
+        }
+
+        [RelayCommand]
         private void Add()
         {
             this.IsAdding = true;
+            this.IsEditing = false;
 
             ToDoItem itemToAdd = new() { Name = string.Empty, DueDate = DateTime.Now };
-                        
+
             this._context.ToDoItems.Add(itemToAdd);
             this._context.SaveChanges();
 
@@ -59,12 +67,12 @@ namespace MAUIToDoList.MAUI
 
             this.ToDoItems.Add(oItemToAdd);
             this.FilteredToDoItems.Add(oItemToAdd);
-                       
-            this.SelectedToDoItem = oItemToAdd;            
+
+            this.SelectedToDoItem = oItemToAdd;
         }
 
         [RelayCommand]
-        private void Delete()
+        private void Delete()  //TODO: Error handling
         {
             ObservableToDoItem? oItemToDelete = this.SelectedToDoItem;
             if (oItemToDelete != null)
@@ -85,7 +93,9 @@ namespace MAUIToDoList.MAUI
                     this._context.ToDoItems.Remove(found);
                     this._context.SaveChanges(true);
                 }
-            }           
+            }
+            this.IsAdding = false;
+            this.IsEditing = false;
         }
     }
 
