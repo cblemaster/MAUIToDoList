@@ -27,8 +27,8 @@ namespace MAUIToDoList.MAUI
         [ObservableProperty]
         private bool _isAdding;
 
-        [ObservableProperty]
-        private bool _isEditing;
+        //[ObservableProperty]
+        //private bool _isEditing;
 
         public ObservableCollection<ObservableToDoItem> GetAllToDoItems() =>
             new(ConvertToDoItemsToObservable
@@ -46,17 +46,12 @@ namespace MAUIToDoList.MAUI
         }
 
         [RelayCommand]
-        private void ListSelectionChangedCommand()
-        {
-            this.IsAdding = false;
-            this.IsEditing = false;
-        }
+        private void ListSelectionChanged() => this.IsAdding = false;
 
         [RelayCommand]
         private void Add()
         {
             this.IsAdding = true;
-            this.IsEditing = false;
 
             ToDoItem itemToAdd = new() { Name = string.Empty, DueDate = DateTime.Now };
 
@@ -95,8 +90,10 @@ namespace MAUIToDoList.MAUI
                 }
             }
             this.IsAdding = false;
-            this.IsEditing = false;
         }
+
+        [RelayCommand]
+        private void Save() => this._context.SaveChanges();
     }
 
     public class ObservableToDoItem : ObservableObject

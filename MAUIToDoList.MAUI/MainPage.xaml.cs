@@ -11,7 +11,6 @@ namespace MAUIToDoList.MAUI
             this._context = ((MainPageModel)this.BindingContext);
 
             this._context.IsAdding = false;
-            this._context.IsEditing = false;
         }
 
         private readonly MainPageModel _context;
@@ -23,11 +22,5 @@ namespace MAUIToDoList.MAUI
                 : new ObservableCollection<ObservableToDoItem>(this._context.ToDoItems.Where(t => !t.IsComplete));
             this.list.SelectedItem = null;
         }
-
-        private void detailControl_ValueChanged(object sender, EventArgs e) =>
-            this.SetIsEditing(isEditing: true);
-
-        private void SetIsEditing(bool isEditing = true) =>
-            this._context.IsEditing = isEditing;
     }
 }
